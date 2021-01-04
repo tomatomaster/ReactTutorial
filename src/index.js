@@ -12,6 +12,7 @@ function Square(props) {
   );
 }
 
+
 class Board extends React.Component {
   renderSquare(i) {
     return (
@@ -81,21 +82,6 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
-    const moves = history.map((step, move) => { //[{},...,{}] step中身, move場所
-      const col = parseInt(step.position[move - 1] % 3);
-      const row = parseInt(step.position[move - 1] / 3);
-      const desc = move ?      
-        `Go to move # ${move} ROW:${row} COL${col}`:
-        'Go to game start';
-      const selected = (move === this.state.stepNumber);
-      return (        
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>
-            {selected ? <b>{desc}</b> : desc }
-          </button>
-        </li>
-      );
-    });
 
     let status;
     if (winner) {
@@ -103,7 +89,7 @@ class Game extends React.Component {
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
-    
+
     return (
       <div className="game">
         <div className="game-board">
@@ -111,12 +97,38 @@ class Game extends React.Component {
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
           />
-        </div>
+        </div>        
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <History history={this.state.history} stepNumber={this.state.stepNumber} jumpTo={step => { this.jumpTo(step); }}/>
         </div>
       </div>
+    );
+  }
+}
+
+class History extends React.Component {
+  
+  render() {
+    const history = this.props.history;
+    const moves = history.map((step, move) => { //[{},...,{}] step中身, move場所
+      const col = parseInt(step.position[move - 1] % 3);
+      const row = parseInt(step.position[move - 1] / 3);
+      const desc = move ?      
+        `Go to move # ${move} ROW:${row} COL${col}`:
+        'Go to game start';
+      const selected = (move === this.props.stepNumber);
+      return (        
+          <li className="historyList" key={move}>
+            <button onClick={() => this.props.jumpTo(move)}>
+              {selected ? <b>{desc}</b> : desc }
+            </button>
+          </li>
+        );
+    });
+
+    return (
+      <ol>{moves}</ol>
     );
   }
 }
