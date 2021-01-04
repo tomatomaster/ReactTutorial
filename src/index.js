@@ -108,27 +108,47 @@ class Game extends React.Component {
 }
 
 class History extends React.Component {
-  
+  constructor(props) {
+    super(props);
+    this.state = { sort: false };
+    this.sortHistory = this.sortHistory.bind(this);//???
+  }
+
+  sortHistory() {
+    this.setState({
+      sort: !this.state.sort
+    });
+  }
+
   render() {
     const history = this.props.history;
-    const moves = history.map((step, move) => { //[{},...,{}] step中身, move場所
+    let moves = history.map((step, move) => { //[{},...,{}] step中身, move場所
       const col = parseInt(step.position[move - 1] % 3);
       const row = parseInt(step.position[move - 1] / 3);
-      const desc = move ?      
-        `Go to move # ${move} ROW:${row} COL${col}`:
+      const desc = move ?
+        `Go to move # ${move} ROW:${row} COL${col}` :
         'Go to game start';
       const selected = (move === this.props.stepNumber);
-      return (        
-          <li className="historyList" key={move}>
-            <button onClick={() => this.props.jumpTo(move)}>
-              {selected ? <b>{desc}</b> : desc }
-            </button>
-          </li>
-        );
+      return (
+        <li className="historyList" key={move}>
+          <button onClick={() => this.props.jumpTo(move)}>
+            {selected ? <b>{desc}</b> : desc}
+          </button>
+        </li>
+      );
     });
+    
+    if (this.state.sort) {
+      moves = moves.slice(0).reverse();
+    }
 
     return (
-      <ol>{moves}</ol>
+      <div>
+        <ol>{moves}</ol>
+        <button onClick={this.sortHistory}>
+          Sort
+        </button>
+      </div>
     );
   }
 }
