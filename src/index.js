@@ -5,43 +5,26 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 function Square(props) {
-  if (props.winner) {
-    return (
-      <button className="square winHighlight" onClick={props.onClick}>
-        {props.value}
-      </button>
-    );
-  } else {
-    return (
-      <button className="square" onClick={props.onClick}>
-        {props.value}
-      </button>
-    );
-  }
-
+  return (
+    <button className={'square ' + (props.winner ? 'winHighlight' : '')} onClick={props.onClick} >
+      { props.value}
+    </button >
+  );
 }
 
 
 class Board extends React.Component {
   renderSquare(i) {
-    if (this.props.wins.includes(i)) {
-      return (
-        <Square
-          value={this.props.squares[i]}
-          onClick={() => this.props.onClick(i)}
-          winner={true}
-        />
-      );
-    } else {
-      return (
-        <Square
-          value={this.props.squares[i]}
-          onClick={() => this.props.onClick(i)}
-          winner={false}
-        />
-      );
-    }
+    const isWin = this.props.wins.includes(i);
+    return (
+      <Square
+        value={this.props.squares[i]}
+        onClick={() => this.props.onClick(i)}
+        winner={isWin}
+      />
+    );
   }
+
 
   render() {
     let boards = [];
