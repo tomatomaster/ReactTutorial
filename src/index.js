@@ -12,33 +12,29 @@ function Square(props) {
   );
 }
 
-
-class Board extends React.Component {
-  renderSquare(i) {
-    const isWin = this.props.wins.includes(i);
-    return (
-      <Square
-        value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
-        winner={isWin}
-      />
-    );
-  }
-
-
-  render() {
-    let boards = [];
-    for (let i = 0; i < 3; i++) {
-      let rows = [];
-      for (let j = 0; j < 3; j++) {
-        rows.push(this.renderSquare(i * 3 + j));
-      }
-      boards.push(<div key={i} className="board-row">{rows}</div>);
+const Board = (props) => {
+  let boards = [];
+  for (let i = 0; i < 3; i++) {
+    let rows = [];
+    for (let j = 0; j < 3; j++) {
+      rows.push(renderSquare(i * 3 + j, props));
     }
-    return (
-      <div>{boards}</div>
-    );
+    boards.push(<div key={i} className="board-row">{rows}</div>);
   }
+  return (
+    <div>{boards}</div>
+  );
+}
+
+function renderSquare(i, props) {
+  const isWin = props.wins.includes(i);
+  return (
+    <Square
+      value={props.squares[i]}
+      onClick={() => props.onClick(i)}
+      winner={isWin}
+    />
+  );
 }
 
 class Game extends React.Component {
